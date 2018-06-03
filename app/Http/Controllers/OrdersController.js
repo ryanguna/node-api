@@ -1,15 +1,23 @@
-
 const express = require('express');
 const router =  express.Router();
+const mongoose = require('mongoose');
+const Order = require('../../Models/Orders');
+
+
 /**
  * GET (/orders)
  * Display a listing of the resource.
  * @return Response
  */
 router.get('/', (req, res, next) => {
-    res.status(200).json({
-        message : 'GET Request /orders'
-    })
+    Order.find()
+        .exec()
+        .then(docs => {
+            res.status(200).json(docs)
+        })
+        .catch(err => {
+            res.status(500).json(err);
+        });
 });
 /**
  * GET (/orders/create)
@@ -28,9 +36,18 @@ router.get('/create', (req, res, next) => {
  * @return Response
  */
 router.post('/', (req, res, next) => {
-    res.status(201).json({
-        message : 'POST Request /orders'
-    })
+    const order = new Order({
+        _id : new mongoose.Types.ObjectId(),
+        quantity : req.body.quantity,
+        product : req.body.productId
+    });
+        order.save().then(result => {
+            console.log('Created to database', result);
+            res.status(201).json(result)
+        })
+        .catch(err => {
+            res.status(500).json(err)
+        });
 });
 /**
  * GET (/orders/{id})

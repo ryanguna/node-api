@@ -3,7 +3,10 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const api = require('./routes/api');
+const mongoose = require('mongoose');
 
+
+mongoose.connect(`mongodb+srv://admin:${process.env.MONGO_ATLAS_PW}@node-api-razng.mongodb.net/test?retryWrites=true`);
 
 //Morgan logs HTTP requests being processed by the application
 app.use(morgan('dev'));
